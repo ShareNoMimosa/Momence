@@ -11,30 +11,23 @@
  */
 
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import Exchange from './components/Exchange';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <Exchange />
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default function Exchange() {
+    React.useEffect(() => {
+        const fetchData = async () => {
+            const response = await fetch('https://www.cnb.cz/en/financial-markets/foreign-exchange-market/central-bank-exchange-rate-fixing/central-bank-exchange-rate-fixing/daily.txt');
+            console.log('response', response);
+
+            const responseText = await response.text();
+
+            console.log(responseText, response.body);
+        };
+
+        fetchData();
+        console.log('test');
+    }, []);
+
+    return (
+        <div>Test</div>
+    );
 }
-
-export default App;
