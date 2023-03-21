@@ -12,6 +12,9 @@
 
 import React from 'react';
 
+/**
+ * Currency exchange data format: https://www.cnb.cz/en/faq/Format-of-the-foreign-exchange-market-rates/
+ */
 type CurrencyData = {
     country: string,
     currency: string,
@@ -19,7 +22,6 @@ type CurrencyData = {
     code: string,
     rate: number
 };
-
 type FormattedExchangeData = { date: string, headers: Array<string>, currencies: Array<CurrencyData> };
 
 function formatExchangeData(data: string): FormattedExchangeData | null {
@@ -61,7 +63,7 @@ function formatExchangeData(data: string): FormattedExchangeData | null {
 }
 
 export default function Exchange() {
-    const [exchangeData, setExchangeData] = React.useState(null);
+    const [exchangeData, setExchangeData] = React.useState<FormattedExchangeData | null>(null);
 
     React.useEffect(() => {
         const fetchData = async () => {
@@ -80,13 +82,13 @@ export default function Exchange() {
 
             const formattedData = formatExchangeData(responseText);
 
+            setExchangeData(formattedData);
+
             console.log(responseText, formattedData);
         };
 
         fetchData();
     }, []);
 
-    return (
-        <div>Test</div>
-    );
+    return exchangeData == null ? <div>Loading...</div> : <div>Test</div>;
 }
