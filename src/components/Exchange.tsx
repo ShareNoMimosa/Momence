@@ -11,12 +11,13 @@
  */
 
 import React, { ReactElement } from 'react';
+import ExchangeTable from './ExchangeTable';
 
 /**
  * Currency exchange data format: https://www.cnb.cz/en/faq/Format-of-the-foreign-exchange-market-rates/
  */
 type CurrencyData = Map<string, string | number>;
-type FormattedExchangeData = { date: string, headers: Array<string>, currencies: Array<CurrencyData> };
+export type FormattedExchangeData = { date: string, headers: Array<string>, currencies: Array<CurrencyData> };
 
 export default function Exchange(): ReactElement {
     const [exchangeData, setExchangeData] = React.useState<FormattedExchangeData | null>(null);
@@ -47,7 +48,9 @@ export default function Exchange(): ReactElement {
         fetchData();
     }, []);
 
-    return exchangeData == null ? <div>Loading...</div> : createTable(exchangeData);
+    return <div className='Exchange'>
+        <ExchangeTable data={exchangeData} />
+    </div>;
 }
 
 function formatExchangeData(data: string): FormattedExchangeData | null {
@@ -87,41 +90,4 @@ function formatExchangeData(data: string): FormattedExchangeData | null {
     });
 
     return formattedData;
-}
-
-function createTable(formattedData: FormattedExchangeData): ReactElement {
-    const headers = formattedData.headers.map(header => {
-        return <th className='ExchangeTableHeader' key={header}>{header}</th>
-    });
-
-    const currencyRows = [];
-    for (let i = 0; i < formattedData.currencies.length; i++) {
-        const currencyData: Array<ReactElement> = [];
-        formattedData.currencies[i].forEach(
-            (currencyDataValue, currencyDataKey) =>
-                currencyData.push(
-                    <td className='CurrencyData' key={currencyDataKey + '-' + i}>
-                        {currencyDataValue}
-                    </td>
-                )
-        );
-        currencyRows.push(
-            <tr className='CurrencyRow' key={'currencyRow-' + i}>
-                {currencyData}
-            </tr>
-        );
-    }
-
-    return <div className='ExchangeTable'>
-        <table>
-            <thead>
-                <tr>
-                    {headers}
-                </tr>
-            </thead>
-            <tbody>
-                {currencyRows}
-            </tbody>
-        </table>
-    </div>;
 }
