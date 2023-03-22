@@ -1,3 +1,8 @@
+.App {
+  background-color: rgba(0, 0, 0, 0.90);
+  color: white;
+}
+
 .Exchange {
   display: flex;
   flex-direction: row;
@@ -18,11 +23,11 @@
 }
 
 .ExchangeTable .CurrencyRow:nth-child(odd) {
-  background-color: #144272;
+  background-color: #1c5086;
 }
 
 .ExchangeTable .CurrencyRow:nth-child(even) {
-  background-color: #0A2647;
+  background-color: #0e2f53;
 }
 
 .ExchangeTable .CurrencyData {
@@ -36,7 +41,8 @@
 .CurrencySelector {
   margin: 12px;
   padding: 8px 12px;
-  background-color: #2C74B3;
+  background-color: #256297;
+  color: white;
 }
 
 .CurrencySelectorOption {
@@ -45,14 +51,18 @@
 
 .CurrencyCalculateInput {
   padding: 8px 12px;
+  background-color: #181A1B;
+  color: white;
 }
 
 .CurrencyCalculateButton {
   margin: 12px;
   padding: 8px 12px;
-  background-color: #2C74B3;
+  background-color: #256297;
+  color: white;
 }
 
 .CurrencyCalculateButton:disabled {
-  background-color: #86929c;
+  background-color: #707981;
+  color: #ffffffcc
 }
