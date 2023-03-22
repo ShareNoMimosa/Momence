@@ -11,13 +11,13 @@
  */
 
 import React, { ReactElement } from 'react';
-import {FormattedExchangeData} from './Exchange';
+import { FormattedExchangeData } from './Exchange';
 
 type Props = {
     data: FormattedExchangeData | null
 }
 
-export default function ExchangeTable({data}: Props): ReactElement {
+export default function ExchangeTable({ data }: Props): ReactElement {
     return data == null ? <div>Loading...</div> : createTable(data);
 }
 
@@ -45,6 +45,9 @@ function createTable(formattedData: FormattedExchangeData): ReactElement {
     }
 
     return <div className='ExchangeTable'>
+        {formattedData.date && <div className='ExchangeDate'>
+            {'Exchange data as of ' + formattedData.date.toLocaleDateString()}
+        </div>}
         <table>
             <thead>
                 <tr>

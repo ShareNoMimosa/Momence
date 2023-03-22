@@ -11,13 +11,14 @@
  */
 
 import React, { ReactElement } from 'react';
+import ExchangeForm from './ExchangeForm';
 import ExchangeTable from './ExchangeTable';
 
 /**
  * Currency exchange data format: https://www.cnb.cz/en/faq/Format-of-the-foreign-exchange-market-rates/
  */
 type CurrencyData = Map<string, string | number>;
-export type FormattedExchangeData = { date: string, headers: Array<string>, currencies: Array<CurrencyData> };
+export type FormattedExchangeData = { date: Date | null, headers: Array<string>, currencies: Array<CurrencyData> };
 
 export default function Exchange(): ReactElement {
     const [exchangeData, setExchangeData] = React.useState<FormattedExchangeData | null>(null);
@@ -39,10 +40,6 @@ export default function Exchange(): ReactElement {
             const formattedData = formatExchangeData(responseText);
 
             setExchangeData(formattedData);
-
-            console.log(formattedData);
-
-
         };
 
         fetchData();
@@ -50,6 +47,7 @@ export default function Exchange(): ReactElement {
 
     return <div className='Exchange'>
         <ExchangeTable data={exchangeData} />
+        <ExchangeForm data={exchangeData} />
     </div>;
 }
 
@@ -61,13 +59,15 @@ function formatExchangeData(data: string): FormattedExchangeData | null {
     }
 
     const formattedData: FormattedExchangeData = {
-        date: '',
+        date: null,
         headers: [],
         currencies: [],
     };
 
-    const dateRow = rows.shift()?.split(' #')[0] || '';
-    formattedData.date = dateRow;
+    const dateRow = Date.parse(rows.shift()?.split(' #')[0] || '');
+    if (!isNaN(dateRow)) {
+        formattedData.date = new Date(dateRow);
+    }
 
     const headersRow = rows.shift()?.split('|') || [];
     formattedData.headers = headersRow;

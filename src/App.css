@@ -1,6 +1,15 @@
+.Exchange {
+  display: flex;
+  flex-direction: row;
+}
+
 .ExchangeTable {
   text-align: left;
   margin: 12px;
+}
+
+.ExchangeDate {
+  margin: 12px 0px;
 }
 
 .ExchangeTable .ExchangeTableHeader {
@@ -18,4 +27,32 @@
 
 .ExchangeTable .CurrencyData {
   padding: 8px;
+}
+
+.ExchangeForm {
+  margin: 24px;
+}
+
+.CurrencySelector {
+  margin: 12px;
+  padding: 8px 12px;
+  background-color: #2C74B3;
+}
+
+.CurrencySelectorOption {
+  background-color: #0A2647;
+}
+
+.CurrencyCalculateInput {
+  padding: 8px 12px;
+}
+
+.CurrencyCalculateButton {
+  margin: 12px;
+  padding: 8px 12px;
+  background-color: #2C74B3;
+}
+
+.CurrencyCalculateButton:disabled {
+  background-color: #86929c;
 }
