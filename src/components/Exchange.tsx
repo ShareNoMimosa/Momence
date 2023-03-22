@@ -10,19 +10,45 @@
  * 5.  Overall: Keep the code simple and the UI nice and easy to use for the user.
  */
 
-import React from 'react';
+import React, { ReactElement } from 'react';
 
 /**
  * Currency exchange data format: https://www.cnb.cz/en/faq/Format-of-the-foreign-exchange-market-rates/
  */
-type CurrencyData = {
-    country: string,
-    currency: string,
-    amount: number,
-    code: string,
-    rate: number
-};
+type CurrencyData = Map<string, string | number>;
 type FormattedExchangeData = { date: string, headers: Array<string>, currencies: Array<CurrencyData> };
+
+export default function Exchange(): ReactElement {
+    const [exchangeData, setExchangeData] = React.useState<FormattedExchangeData | null>(null);
+
+    React.useEffect(() => {
+        const fetchData = async () => {
+            /**
+             * Actually will run into CORS error because cnb server returns
+             * 'Access-Control-Allow-Origin: apl.cnb.cz' header while we're
+             * running our react app on localhost:3000.
+             * 
+             * For this exercise bypassing CORS locally with a browser
+             * extension. A more practical solution would be standing up our
+             * own server to route request and return an
+             * 'Access-Control-Allow-Origin', '*' header instead. */
+            const response = await fetch('https://www.cnb.cz/en/financial-markets/foreign-exchange-market/central-bank-exchange-rate-fixing/central-bank-exchange-rate-fixing/daily.txt');
+
+            const responseText = await response.text();
+            const formattedData = formatExchangeData(responseText);
+
+            setExchangeData(formattedData);
+
+            console.log(formattedData);
+
+
+        };
+
+        fetchData();
+    }, []);
+
+    return exchangeData == null ? <div>Loading...</div> : createTable(exchangeData);
+}
 
 function formatExchangeData(data: string): FormattedExchangeData | null {
     const rows = data.split('\n');
@@ -43,52 +69,59 @@ function formatExchangeData(data: string): FormattedExchangeData | null {
     const headersRow = rows.shift()?.split('|') || [];
     formattedData.headers = headersRow;
 
-    rows.map(row => {
+    rows.forEach(row => {
         const rowData = row.split('|');
 
         if (rowData.length !== 5) {
             return;
         }
 
-        formattedData.currencies.push({
-            country: rowData[0],
-            currency: rowData[1],
-            amount: parseFloat(rowData[2]),
-            code: rowData[3],
-            rate: parseFloat(rowData[4])
-        });
+        formattedData.currencies.push(
+            new Map<string, string | number>([
+                ["country", rowData[0]],
+                ["currency", rowData[1]],
+                ["amount", parseFloat(rowData[2])],
+                ["code", rowData[3]],
+                ["rate", parseFloat(rowData[4])]
+            ]));
     });
 
     return formattedData;
 }
 
-export default function Exchange() {
-    const [exchangeData, setExchangeData] = React.useState<FormattedExchangeData | null>(null);
+function createTable(formattedData: FormattedExchangeData): ReactElement {
+    const headers = formattedData.headers.map(header => {
+        return <th className='ExchangeTableHeader' key={header}>{header}</th>
+    });
 
-    React.useEffect(() => {
-        const fetchData = async () => {
-            /**
-             * Actually will run into CORS error because cnb server returns
-             * 'Access-Control-Allow-Origin: apl.cnb.cz' header while we're
-             * running our react app on localhost:3000.
-             * 
-             * For this exercise bypassing CORS locally with a browser
-             * extension. A more practical solution would be standing up our
-             * own server to route request and return an
-             * 'Access-Control-Allow-Origin', '*' header instead. */
-            const response = await fetch('https://www.cnb.cz/en/financial-markets/foreign-exchange-market/central-bank-exchange-rate-fixing/central-bank-exchange-rate-fixing/daily.txt');
+    const currencyRows = [];
+    for (let i = 0; i < formattedData.currencies.length; i++) {
+        const currencyData: Array<ReactElement> = [];
+        formattedData.currencies[i].forEach(
+            (currencyDataValue, currencyDataKey) =>
+                currencyData.push(
+                    <td className='CurrencyData' key={currencyDataKey + '-' + i}>
+                        {currencyDataValue}
+                    </td>
+                )
+        );
+        currencyRows.push(
+            <tr className='CurrencyRow' key={'currencyRow-' + i}>
+                {currencyData}
+            </tr>
+        );
+    }
 
-            const responseText = await response.text();
-
-            const formattedData = formatExchangeData(responseText);
-
-            setExchangeData(formattedData);
-
-            console.log(responseText, formattedData);
-        };
-
-        fetchData();
-    }, []);
-
-    return exchangeData == null ? <div>Loading...</div> : <div>Test</div>;
+    return <div className='ExchangeTable'>
+        <table>
+            <thead>
+                <tr>
+                    {headers}
+                </tr>
+            </thead>
+            <tbody>
+                {currencyRows}
+            </tbody>
+        </table>
+    </div>;
 }

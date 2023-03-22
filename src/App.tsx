@@ -11,17 +11,13 @@
  */
 
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Exchange from './components/Exchange';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Exchange />
-      </header>
+      <Exchange />
     </div>
   );
 }
