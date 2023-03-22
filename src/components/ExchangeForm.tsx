@@ -22,6 +22,10 @@ export default function ExchangeForm({ data }: Props): ReactElement | null {
     const [convertAmountInput, setConvertAmountInput] = React.useState<string>("");
     const [resultStr, setResultStr] = React.useState<string>('');
 
+    if  (data == null) {
+        return null;
+    }
+
     const selectorOptions = getSelectorOptions(data);
 
     const onSelectChange = function (event: ChangeEvent<HTMLSelectElement>) {
@@ -88,11 +92,7 @@ export default function ExchangeForm({ data }: Props): ReactElement | null {
     </div>;
 }
 
-function getSelectorOptions(data: FormattedExchangeData | null): Array<ReactElement> {
-    if (data == null) {
-        return [];
-    }
-
+function getSelectorOptions(data: FormattedExchangeData): Array<ReactElement> {
     const selectorOptions: Array<ReactElement> = [];
 
     for (let i = 0; i < data.currencies.length; i++) {

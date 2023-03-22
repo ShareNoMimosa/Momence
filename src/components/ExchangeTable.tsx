@@ -17,8 +17,8 @@ type Props = {
     data: FormattedExchangeData | null
 }
 
-export default function ExchangeTable({ data }: Props): ReactElement {
-    return data == null ? <div>Loading...</div> : createTable(data);
+export default function ExchangeTable({ data }: Props): ReactElement | null {
+    return data == null ? null : createTable(data);
 }
 
 function createTable(formattedData: FormattedExchangeData): ReactElement {
