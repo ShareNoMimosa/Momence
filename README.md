@@ -17,6 +17,12 @@ Note:
 As commented in `/src/components/Exchange.tsx`, normal fetch call to the API URL will actually run into CORS error because cnb server returns `Access-Control-Allow-Origin: apl.cnb.cz` header while we're running our react app on `localhost:3000`. For this exercise I bypassed CORS locally with a browser extension (Allow CORS: Access-Control-Allow-Origin). A more practical solution would be standing up our own server to route request and return an
 `Access-Control-Allow-Origin: *` header instead which was out of scope.
 
+# Demo
+
+https://user-images.githubusercontent.com/8609540/227068168-f03cdf6d-2d54-4941-a9cf-bcf34dda9720.mp4
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
